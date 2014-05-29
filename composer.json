@@ -1,0 +1,26 @@
+{
+    "name": "christie/bones",
+    "description": "",
+    "authors": [
+        {
+            "name": "Malcolm Christie",
+            "email": "malcolm@christiesmedia.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/controllers",
+            "src/christie/bones/facades",
+            "src/christie/bones/libraries",
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Christie\\Bones\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
