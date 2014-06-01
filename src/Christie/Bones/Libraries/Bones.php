@@ -23,30 +23,32 @@ class Bones {
     const STATUS_DRAFT      = 20;
     const STATUS_DELETED    = 30;
 
-    public $site = null;
-
-    private $x = 1;
+    // Will store the current site object after construct
+    public $site            = null;
 
     private $package_prefix = 'bones::';
 
     // Bundled fieldtypes, registered 3rd party field types will be added here
-    private $field_types = array(
+    private $field_types    = array(
         'wysiwyg' => '\Christie\Bones\Fieldtypes\WysiwygField'
     );
 
     // Bundled widgets, registered 3rd party field types will be added here
-    private $widgets = array(
+    private $widgets        = array(
         'structured_menu'  => '\Christie\Bones\Widgets\StructuredMenuWidget'
     );
 
     // Files from the config and register calls will be added here
-    private $js_urls = array();
-    private $css_urls = array();
+    private $js_urls        = array();
+    private $css_urls       = array();
 
     /*
      *  The first time we instantiate Bones, there's a few things we need to do
      */
     public function __construct() {
+        // We don't do anything in console and it breaks stuff, so abort now
+        if (\App::runningInConsole()) return;
+
         $this->detectSite();
 
         return $this;
@@ -95,6 +97,13 @@ class Bones {
      */
     public function fieldTypes() {
         return $this->field_types;
+    }
+
+    /*
+     *  Add a widget so we can use it on demand
+     */
+    public function registerWidget($widget_name, $class) {
+        $this->widgets[$widget_name] = $class;
     }
 
     /*

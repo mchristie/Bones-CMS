@@ -2,6 +2,8 @@
 
 namespace Christie\Bones\Models;
 
+use \Auth;
+
 trait BonesModel {
 
     /*
@@ -23,10 +25,16 @@ trait BonesModel {
      *  Restrict any Bones model to the specified level
      */
     public function scopeVisibleBy($query, $level = false) {
-        // False = detect the current user level
 
-        // TODO: Detect current user level
-        if ($level === false) $level = 10;
+        // Use the current user level, if available
+        if ($level === false && Auth::check()) {
+            $level = Auth::user()->level;
+
+        // Default to public
+        } else if($level === false) {
+            $level = Bones::LEVEL_PUBLIC;
+
+        }
 
         $query->where('level', '<=', $level);
 
@@ -37,12 +45,14 @@ trait BonesModel {
      *  Restrict any Bones model to the specified status
      */
     public function scopeStatus($query, $status = false) {
-        // False, detect the current user level
+        // If the user is logged in and a status is specific, restrict
+        if (Auth::check() && $status) {
+            $query->where('status', $status);
 
-        // TODO: Detect appropriate level for user level
-        if ($status === false) $status = \Christie\Bones\Libraries\Bones::STATUS_PUBLISHED;
-
-        $query->where('status', $status);
+        // If not, default to only published entries
+        } else if (!Auth::check()) {
+            $query->where('status', \Christie\Bones\Libraries\Bones::STATUS_PUBLISHED);
+        }
 
         return $query;
     }

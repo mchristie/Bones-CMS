@@ -15,9 +15,14 @@ class Field extends Eloquent {
     }
 
     public function initialize( $field_data, Entry $entry) {
+        // We only want to initialize this field once, so return if it exists
+        if ($this->initialized) return $this->initialized;
+
         $bones = \App::make('bones');
 
-        return $bones->fieldType($field_data, $this, $entry);
+        $this->initialized = $bones->fieldType($field_data, $this, $entry);
+
+        return $this->initialized;
     }
 
 }

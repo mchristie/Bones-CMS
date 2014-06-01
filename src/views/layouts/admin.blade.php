@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    @include('bones::admin.navbar')
+    @include('bones::admin.fragments.navbar')
 
     <div class="container">
         @yield('main')

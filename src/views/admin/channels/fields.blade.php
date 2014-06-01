@@ -26,6 +26,10 @@
                 </tbody>
             </table>
 
+            <p>
+                <a href="{{URL::route('channel_field', array($channel->id, 'new'))}}" class="btn btn-default">New field</a>
+            </p>
+
         </div>
     </div>
 

@@ -127,12 +127,15 @@
             change: function(el, x) {
                 // console.dir(x);
                 // console.log('Relocated item');
+            },
+            stop: function(el, x) {
+                console.log(el);
             }
         });
     });
 
     $('#sort-modal').on('hide.bs.modal', function() {
-        var data = $('.sortable').nestedSortable('serialize', {startDepthCount: 0});
+        var data = $('.sortable').nestedSortable('toArray', {startDepthCount: 0});
         console.log(data);
     });
 

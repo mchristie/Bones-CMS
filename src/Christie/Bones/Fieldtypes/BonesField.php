@@ -23,7 +23,7 @@ class BonesField {
         if ($field_data) return $field_data;
 
         // Create a new field data record
-        return \Christie\Bones\FieldData::create(array(
+        return \Christie\Bones\Models\FieldData::create(array(
             'entry_id' => $entry->id,
             'field_id' => $this->id
         ));
@@ -35,6 +35,27 @@ class BonesField {
 
     public function displaysEditForm() {
         return true;
+    }
+
+    /*
+     *  Save the data stored from populate
+     */
+    public function save() {
+        return $this->field_data->save();
+    }
+
+    /*
+     *  Return BOOL, true if there are errors
+     */
+    public function hasErrors() {
+        return $this->error ? true : false;
+    }
+
+    /*
+     *  Return the errors for this field
+     */
+    public function showErrors() {
+        return $this->error;
     }
 
     /*

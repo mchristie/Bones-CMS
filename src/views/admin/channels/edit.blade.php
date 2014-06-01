@@ -20,7 +20,7 @@
 
                 <div class="form-group">
                     <label for="slug">Type</label>
-                    <select class="form-control" name="list_view">
+                    <select class="form-control" name="type">
                         <option value="structured" @if($channel->type == 'structured')selected="selected"@endif>Structured</option>
                         <option value="listing" @if($channel->type == 'listing')selected="selected"@endif>Listing</option>
                     </select>

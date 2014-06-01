@@ -135,7 +135,7 @@ class Entry extends Node {
 
       if ( $this->isScoped() ) {
         foreach($this->scoped as $scopeFld)
-          $builder->where($scopeFld, '=', $this->$scopeFld);
+            $builder->where($scopeFld, '=', $this->$scopeFld);
       }
 
       return $builder->restrict();
