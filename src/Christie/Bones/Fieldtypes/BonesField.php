@@ -20,13 +20,13 @@ class BonesField {
     public function findOrCreateFieldData( \Christie\Bones\Models\Entry $entry ) {
         // Find custom data and return it if we can
         $field_data = $entry->fielddata()->where('field_id', $this->id)->first();
-        if ($field_data) return $field_data;
+        if ($field_data) return $field_data->initialize($this);
 
         // Create a new field data record
         return \Christie\Bones\Models\FieldData::create(array(
             'entry_id' => $entry->id,
             'field_id' => $this->id
-        ));
+        ))->initialize($this);
     }
 
     public function __toString() {
@@ -62,6 +62,10 @@ class BonesField {
      *  When we access a value on any BonesField, we're really looking for the field details
      */
     public function __get($field) {
+
+        if ($this->field_data && $this->field_data->hasField($field))
+            return $this->field_data->$field;
+
         return $this->field->$field;
     }
 

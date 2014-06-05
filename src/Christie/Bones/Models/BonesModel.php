@@ -32,7 +32,7 @@ trait BonesModel {
 
         // Default to public
         } else if($level === false) {
-            $level = Bones::LEVEL_PUBLIC;
+            $level = \Christie\Bones\Libraries\Bones::LEVEL_PUBLIC;
 
         }
 
