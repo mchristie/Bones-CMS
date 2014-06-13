@@ -4,12 +4,16 @@ namespace Christie\Bones\Libraries;
 
 use \Config;
 use \Request;
+use \Route;
 use \Input;
 use \View;
+use \App;
+use \Auth;
 
-use Christie\Bones\Models\Site;
-use Christie\Bones\Models\Channel;
-use Christie\Bones\Models\Entry;
+use \Christie\Bones\Models\Site;
+use \Christie\Bones\Models\Channel;
+use \Christie\Bones\Models\Entry;
+use \Christie\Bones\Models\Component;
 
 class Bones {
 
@@ -26,11 +30,19 @@ class Bones {
     // Will store the current site object after construct
     public $site            = null;
 
+    private $is_admin_view  = false;
+
     private $package_prefix = 'bones::';
 
     // Bundled fieldtypes, registered 3rd party field types will be added here
     private $field_types    = array(
-        'wysiwyg' => '\Christie\Bones\Fieldtypes\WysiwygField'
+        'Standard' => array(
+            'checkboxes' => '\Christie\Bones\Fieldtypes\CheckboxesField',
+            'email'      => '\Christie\Bones\Fieldtypes\EmailField',
+            'wysiwyg'    => '\Christie\Bones\Fieldtypes\WysiwygField',
+            'text'       => '\Christie\Bones\Fieldtypes\TextField',
+            'textarea'   => '\Christie\Bones\Fieldtypes\TextAreaField'
+        )
     );
 
     // Bundled widgets, registered 3rd party field types will be added here
@@ -38,9 +50,18 @@ class Bones {
         'structured_menu'  => '\Christie\Bones\Widgets\StructuredMenuWidget'
     );
 
+    private $components     = array();
+
     // Files from the config and register calls will be added here
     private $js_urls        = array();
     private $css_urls       = array();
+
+    // Status titles
+    private $status_titles  = array(
+        self::STATUS_PUBLISHED  => 'Published',
+        self::STATUS_DRAFT      => 'Draft',
+        self::STATUS_DELETED    => 'Deleted'
+    );
 
     /*
      *  The first time we instantiate Bones, there's a few things we need to do
@@ -78,25 +99,111 @@ class Bones {
     }
 
     /*
+     *  Return a key/value array of user levels
+     */
+    public function levels( $id = null ) {
+        $titles = array(
+            self::LEVEL_PUBLIC  => 'Public',
+            self::LEVEL_USER    => 'User',
+            self::LEVEL_ADMIN   => 'Admin',
+            self::LEVEL_SUPER   => 'Super Admin'
+            // Don't include system, it should never be shown
+            // self::LEVEL_SYSTEM  => 'System',
+        );
+
+        if ($id && array_key_exists($id, $titles))
+            return $titles[$id];
+
+        return $titles;
+    }
+
+    /*
+     *  Pass in true/false indication if this is an admin view
+     *  If NOT a admin view, filters will default to not showing unpublished content, even for admins
+     */
+    public function isAdminView($set = null) {
+        if ($set !== null)
+            $this->is_admin_view = $set;
+
+        return $this->is_admin_view;
+    }
+
+    /*
      *  Add a field type so we can use it on demand
      *  $field_name = 'wysiwyg', $class = '\Christie\Bones\WysiwygField'
      */
-    public function registerFieldType($field_name, $class) {
-        $this->field_types[$field_name] = $class;
+    public function registerFieldType($group, $field_name, $class) {
+        $this->field_types[$group][$field_name] = $class;
     }
 
     /*
      *  Instantiate the correct field type with the data row, field row, and entry row
      */
-    public function fieldType( $field_data, \Christie\Bones\Models\Field $field, \Christie\Bones\Models\Entry $entry) {
-        return new $this->field_types[ $field->field_type ]( $field_data, $field, $entry );
+    public function fieldType( $field_data, $field, $entry) {
+        foreach ($this->field_types as $key => $types) {
+            if (array_key_exists($field->field_type, $types))
+                return new $types[ $field->field_type ]( $field_data, $field, $entry );
+        }
     }
 
     /*
      *  Return the field types array
      */
-    public function fieldTypes() {
+    public function fieldTypes($type = null) {
+        if ($type) {
+            foreach ($this->field_types as $key => $types) {
+                if (array_key_exists($type, $types))
+                    return $types[ $type ];
+
+            }
+        }
+
         return $this->field_types;
+    }
+
+    /*
+     *  Return a list of components
+     */
+    public function components($opt = null, $only_in_menu = false) {
+        // Return only installed components
+        if ($opt === true) {
+            $installed = array();
+            $components = Component::currentSite()->get();
+            foreach ($components as $component) {
+                if ($only_in_menu == false || ($only_in_menu && $component->in_menu))
+                    $installed[$component->type] = $this->components[$component->type];
+            }
+            return $installed;
+        }
+
+        if ($opt && array_key_exists($opt, $this->components))
+            return $this->components[$opt];
+
+        return $this->components;
+    }
+
+    /*
+     *  Add a component so we can use it on demand
+     */
+    public function registerComponent($component_name, $class, $controller) {
+        $this->components[$component_name] = $class;
+
+        $component = App::make($component_name);
+
+        Route::any($component->urlPath(), array(
+            'as'        => 'component_'.$component_name,
+            'before'    => 'bones_auth',
+            'uses'      => $controller
+        ));
+
+        $component->initialize();
+    }
+
+    public function registerComponentRoutes($path, $callback) {
+        Route::group(array(
+            // 'prefix' => $path,
+            'before' => 'bones_auth'
+        ), $callback);
     }
 
     /*
@@ -185,7 +292,7 @@ class Bones {
 
         // We're not paging, so return the results
         } else if ($paging === false) {
-            return $this->_entries->get();
+            return $_entries->get();
         }
     }
 
@@ -263,7 +370,7 @@ class Bones {
      *  Take a view and data, merge it with global data, and return the view
      *  This will look for site specific, global, or bones default views
      */
-    public function view($_view_name, $data = array()) {
+    public function view($_view_name, $data = array(), $package = 'bones') {
         // Look for a site specific view file
         if (View::exists( $this->site()->slug .'.'. $_view_name )) {
             $view_name = $this->site()->slug .'.'. $_view_name;
@@ -273,8 +380,8 @@ class Bones {
             $view_name = $_view_name;
 
         // Bones provided view file
-        } elseif (View::exists( $this->package_prefix.$_view_name )) {
-            $view_name = $this->package_prefix.$_view_name;
+        } elseif (View::exists( $package.'::'.$_view_name )) {
+            $view_name = $package.'::'.$_view_name;
 
         } else {
             throw new \Exception("View file '$_view_name' not found.");
@@ -373,15 +480,85 @@ class Bones {
      *  Add a JS url to the list of includes
      */
     public function includeJS($url) {
-        $this->js_urls[] = $url;
+        if (!in_array($url, $this->js_urls))
+            $this->js_urls[] = $url;
     }
 
     /*
      *  Add a CSS url to the list of includes
      */
     public function includeCSS($url) {
-        $this->css_urls[] = $url;
+        if (!in_array($url, $this->css_urls))
+            $this->css_urls[] = $url;
     }
 
+    /*
+     *  Return status titles, or a title by ID
+     */
+    public function statusTitles($id = null) {
+        if ($id && array_key_exists($id, $this->status_titles)) {
+            return $this->status_titles[$id];
+
+        } else if ($id) {
+            return null;
+
+        } else {
+            return $this->status_titles;
+        }
+    }
+
+    /*
+     *  Create an entry
+     */
+    public function createEntry($channel, $data) {
+        if (is_string($channel))
+            $channel = $this->channel($channel);
+
+        if (!$channel instanceof \Christie\Bones\Models\Channel)
+            throw new \Exception('Bones::createEntry - Channel not found');
+
+        // If the auth level isn't public, or the level isn't high enough, fail
+        if ($channel->publish_level > self::LEVEL_PUBLIC || !(Auth::check() && Auth::user()->level >= $channel->publish_level))
+            return false;
+
+        $entry = Entry::create(array(
+            'title'      => Input::get('name'),
+            'channel_id' => 7,
+            'site_id'    => $this->site()->id,
+            'status'     => self::STATUS_DRAFT
+        ));
+
+        if (!$entry->slug) $entry->generateSlug();
+
+        $fields  = $channel->fieldsWithEntry($entry);
+
+        // Populate and validate the entry first
+        $entry->populate($data);
+        $validates = $entry->validates();
+
+        // Now populate and validate all the custom fields
+        foreach ($fields as &$field) {
+            $field->populate($data);
+
+            if (!$field->validates()) $validates = false;
+        }
+
+        // If there were no errors, we can save everything
+        if ($validates) {
+            $entry->save();
+            foreach ($fields as &$field) {
+                $field->save();
+            }
+        }
+
+        return $validates;
+    }
+
+    /*
+     *  Return a snippet instance
+     */
+    public function snippet($key) {
+        return \Christie\Bones\Models\Snippet::currentSite()->where('key', $key)->first();
+    }
 
 }

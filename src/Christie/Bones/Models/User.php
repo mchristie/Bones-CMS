@@ -8,7 +8,11 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-    protected $table = 'users';
+    use BonesModel;
+
+    public function site() {
+        return $this->belongsTo('Christie\Bones\Models\Site');
+    }
 
     protected $hidden = array('password');
 
@@ -34,4 +38,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->email;
     }
 
+    /*
+     *  Return BOOL indicating if the user is at or above the level
+     */
+    public function isLevel($level) {
+        return $this->level >= $level;
+    }
 }

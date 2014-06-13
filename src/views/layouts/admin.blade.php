@@ -17,6 +17,24 @@
         @yield('main')
     </div>
 
+
+
+    <div class="row">
+        <div class="cols-sm-12">
+
+            <hr>
+
+            <div class="container">
+
+                <p class="text-muted">Bones CMS</p>
+
+            </div>
+
+        </div>
+    </div>
+
+    <p>&nbsp;</p>
+
     {{Bones::jsIncludes()}}
 
     @yield('additional_js')

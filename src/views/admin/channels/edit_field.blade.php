@@ -7,6 +7,8 @@
 
             <form role="form" method="post">
 
+                <input type="hidden" name="field_type" value="{{$field->field_type}}">
+
                 <div class="form-group">
                     <label for="label">Field label</label>
                     <input type="text" class="form-control" id="label" name="label" placeholder="Field label" value="{{$field->label}}">
@@ -17,20 +19,9 @@
                     <input type="text" class="form-control" id="name" name="name" placeholder="Field name" value="{{$field->name}}">
                 </div>
 
-                <div class="form-group">
-                    <label for="name">Field type</label>
-                    <select class="form-control" name="field_type">
-                        @foreach($field_types as $type => $class)
-
-                            @if($type == $field->field_type)
-                                <option value="{{$type}}" selected="selected">{{$class::$title}}</option>
-                            @else
-                                <option value="{{$type}}">{{$class::$title}}</option>
-                            @endif
-
-                        @endforeach
-                    </select>
-                </div>
+                @if($field->displaysSettingsForm())
+                    {{$field->settingsForm()}}
+                @endif
 
                 <button type="submit" class="btn btn-primary" name="submit" value="save">Save changes</button>
             </form>

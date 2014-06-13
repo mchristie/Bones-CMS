@@ -70,6 +70,9 @@ class Entry extends Node {
 
         if (array_key_exists('slug', $input))
             $this->slug = $input['slug'];
+
+        if (array_key_exists('status', $input))
+            $this->status = $input['status'];
     }
 
     /*
@@ -124,6 +127,12 @@ class Entry extends Node {
         return parent::__get($field);
     }
 
+    public function generateSlug() {
+        $this->slug = $this->channel->slug.'-'.$this->id;
+        $this->save();
+        return $this;
+    }
+
     /**
      * Get a new "scoped" query builder for the Node's model.
      *
@@ -131,13 +140,13 @@ class Entry extends Node {
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
     public function newNestedSetQuery($excludeDeleted = true) {
-      $builder = $this->newQuery($excludeDeleted)->orderBy($this->getOrderColumnName());
+        $builder = $this->newQuery($excludeDeleted)->orderBy($this->getOrderColumnName());
 
-      if ( $this->isScoped() ) {
-        foreach($this->scoped as $scopeFld)
-            $builder->where($scopeFld, '=', $this->$scopeFld);
-      }
+        if ( $this->isScoped() ) {
+            foreach($this->scoped as $scopeFld)
+                $builder->where($scopeFld, '=', $this->$scopeFld);
+        }
 
-      return $builder->restrict();
+        return $builder->restrict();
     }
 }

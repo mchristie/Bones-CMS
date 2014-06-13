@@ -14,7 +14,7 @@ class Channels extends Migration {
 	{
 		Schema::create('channels', function($table) {
 			$table->increments('id');
-			$table->integer('site_id');
+			$table->integer('site_id')->nullable();
 			$table->string('title');
 			$table->string('slug');
 			$table->timestamps();

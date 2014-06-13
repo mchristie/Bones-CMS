@@ -30,7 +30,7 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
         return \Christie\Bones\Models\FieldData::create(array(
             'entry_id'  => $entry->id,
             'field_id'  => $this->id,
-            'text_data' => 'This is my new WYSIWYG field!'
+            'text_data' => ''
         ));
     }
 
@@ -39,7 +39,18 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
      *  TODO: This should probably use views and show it's own label etc
      */
     public function editForm() {
-        return '<textarea class="form-control" rows="3" name="'.$this->name.'">'.$this->field_data->text_data.'</textarea>';
+        // We need to ensure the JS file is included
+        $bones = \App::make('bones');
+        $bones->includeJS('/packages/christie/bones/tinymce/tinymce.min.js');
+
+        // In-case we have multiple editors, give it a (probably) unique ID
+        $uid = rand(0, 999);
+
+        // Initialize the editor
+        \View::inject('additional_js', '<script type="text/javascript">tinymce.init({selector: "#wysiwyg-'.$uid.'"});</script>');
+
+        // And return the HTML
+        return '<textarea class="form-control" rows="10" name="'.$this->name.'" id="wysiwyg-'.$uid.'">'.$this->field_data->text_data.'</textarea>';
     }
 
     /*
@@ -55,8 +66,8 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
      *  Perform validation on the input array, and return true/false for valid/not-valid
      */
     public function validates() {
-        if (strlen($this->field_data->text_data) < 10) {
-            $this->error = 'The field must be at at least 10 characters long.';
+        if (strlen($this->field_data->text_data) < 2) {
+            $this->error = 'The field must be at at least 2 characters long.';
             return false;
         }
 

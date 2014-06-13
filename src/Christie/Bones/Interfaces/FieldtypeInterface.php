@@ -15,6 +15,12 @@ interface FieldtypeInterface
     // The field where admins can modify content
     public function editForm();
 
+    // BOOL Indicating if this field has settings to modify
+    public function displaysSettingsForm();
+
+    // Show the form where admins can edit settings
+    public function settingsForm();
+
     /*
      *  Select the appropriate data from the POST input but DON'T save it
      *  The data should be stored in memory for displaying the form again if necessary

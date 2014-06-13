@@ -13,15 +13,27 @@
                     </div>
                 @endif
 
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Entry title" value="{{$entry->title}}">
-                </div>
-
-                <div class="form-group">
-                    <label for="title">URL slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" placeholder="Entry URL slug" value="{{$entry->slug}}">
-                </div>
+                {{BonesForms::fields(array(
+                    array(
+                        'title'     => 'Title',
+                        'name'      => 'title',
+                        'type'      => 'text',
+                        'value'     => $entry->title
+                    ),
+                    array(
+                        'title'     => 'URL slug',
+                        'name'      => 'slug',
+                        'type'      => 'text',
+                        'value'     => $entry->slug
+                    ),
+                    array(
+                        'title'     => 'Status',
+                        'name'      => 'status',
+                        'type'      => 'select',
+                        'options'   => 'statuses',
+                        'value'     => $entry->status
+                    )
+                ))}}
 
                 @foreach($fields as $field)
                     @if($field->displaysEditForm())

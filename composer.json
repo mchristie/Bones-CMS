@@ -11,7 +11,7 @@
         "php": ">=5.4.0",
         "illuminate/support": "4.1.*",
         "baum/baum": "dev-master",
-        "laravel/framework": "4.1.*"
+        "gregwar/image": "dev-master"
     },
     "autoload": {
         "classmap": [

@@ -14,8 +14,6 @@ use Christie\Bones\Models\Widget;
 
 class WidgetsController extends BonesController {
 
-    // widgets
-
     public function showWidgets() {
         return $this->bones->view('admin.widgets.index', array(
             'widgets' => Widget::currentSite()->get()

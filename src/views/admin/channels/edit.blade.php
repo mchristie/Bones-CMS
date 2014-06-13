@@ -7,44 +7,52 @@
 
             <form role="form" method="post">
 
-                <div class="form-group">
-                    <label for="title">Channel title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Channel title" value="{{$channel->title}}">
-                </div>
-
-                <div class="form-group">
-                    <label for="slug">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" placeholder="Channel slug" value="{{$channel->slug}}">
-                    <p class="help-block">The channel slug is used in the URL to determine which channel to show.</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="slug">Type</label>
-                    <select class="form-control" name="type">
-                        <option value="structured" @if($channel->type == 'structured')selected="selected"@endif>Structured</option>
-                        <option value="listing" @if($channel->type == 'listing')selected="selected"@endif>Listing</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="slug">List view</label>
-                    <select class="form-control" name="list_view">
-                        <option value="null">(None)</option>
-                        @foreach(Config::get('bones::bones.views') as $group => $views)
-                            <optgroup label="{{$group}}">
-
-                            @foreach($views as $file => $title)
-                                @if($channel->list_view == $file)
-                                    <option value="{{$file}}" selected="selected">{{$title}}</option>
-                                @else
-                                    <option value="{{$file}}">{{$title}}</option>
-                                @endif
-                            @endforeach
-
-                            </optgroup>
-                        @endforeach
-                    </select>
-                </div>
+                {{BonesForms::fields(array(
+                    array(
+                        'title'     => 'Title',
+                        'name'      => 'title',
+                        'type'      => 'text',
+                        'value'     => $channel->title
+                    ),
+                    array(
+                        'title'     => 'Slug',
+                        'name'      => 'slug',
+                        'type'      => 'text',
+                        'value'     => $channel->slug,
+                        'help'      => 'The channel slug is used in the URL to determine which channel to show.'
+                    ),
+                    array(
+                        'title'     => 'Site',
+                        'name'      => 'site_id',
+                        'type'      => 'select',
+                        'options'   => 'sites',
+                        'value'     => $channel->site_id,
+                        // 'help'      => 'Users of this level and above will be able to add entries to this channel.'
+                    ),
+                    array(
+                        'title'     => 'Type',
+                        'name'      => 'type',
+                        'type'      => 'select',
+                        'options'   => 'channel_types',
+                        'value'     => $channel->type,
+                        // 'help'      => 'Users of this level and above will be able to add entries to this channel.'
+                    ),
+                    array(
+                        'title'     => 'Publish level',
+                        'name'      => 'publish_level',
+                        'type'      => 'select',
+                        'options'   => 'levels',
+                        'value'     => $channel->publish_level,
+                        'help'      => 'Users of this level and above will be able to add entries to this channel.'
+                    ),
+                    array(
+                        'title'     => 'List view',
+                        'name'      => 'list_view',
+                        'type'      => 'select',
+                        'options'   => Config::get('bones::bones.views'),
+                        'value'     => $channel->list_view
+                    ),
+                ))}}
 
                 <div class="form-group">
                     <label for="slug">Entry view</label>

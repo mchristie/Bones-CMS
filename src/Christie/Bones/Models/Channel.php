@@ -10,7 +10,7 @@ class Channel extends Eloquent {
 
     private $_fields = null;
 
-    protected $fillable = array('site_id', 'title', 'slug', 'created_at', 'updated_at', 'list_view', 'entry_view', 'type');
+    protected $fillable = array('site_id', 'title', 'slug', 'created_at', 'updated_at', 'list_view', 'entry_view', 'type', 'publish_level');
 
     public function site() {
         return $this->belongsTo('\Christie\Bones\Models\Site');

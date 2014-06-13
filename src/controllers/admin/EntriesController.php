@@ -23,14 +23,20 @@ class EntriesController extends BonesController {
         $this->bones->includeCSS('/packages/christie/bones/jquery-ui-1.10.4.custom.min.css');
 
         $entries = $channel->entries()->restrict()->get();
-        $structured = $channel->entryTree();
 
-        return $this->bones->view('admin.entries.channel_entries', array(
+        $data = array(
             'channel'       => $channel,
             'entries'       => $entries,
-            'structured'    => $structured,
-            'root'          => $channel->root()
-        ));
+        );
+
+
+        if ($channel->type == 'structured') {
+            $structured         = $channel->entryTree();
+            $data['structured'] = $structured;
+            $data['root']       = $channel->root();
+        }
+
+        return $this->bones->view('admin.entries.channel_entries', $data);
     }
 
     public function showEntries() {
@@ -57,6 +63,9 @@ class EntriesController extends BonesController {
                 'site_id'    => $this->bones->site()->id,
                 'status'     => Libraries\Bones::STATUS_DRAFT
             ));
+
+            $entry->generateSlug();
+            return Redirect::route('entry_edit', $entry->id);
         } else {
             $entry   = $this->bones->entry($id);
             $channel = $entry->channel;
@@ -88,7 +97,7 @@ class EntriesController extends BonesController {
 
                 // And send the user back to the entry list
                 // TODO: We should send a conformation message too
-                return Redirect::route('entries');
+                return Redirect::route('channel_entries', $entry->channel_id);
             }
         }
 
