@@ -11,7 +11,7 @@
         "php": ">=5.4.0",
         "illuminate/support": "4.1.*",
         "baum/baum": "~1.0",
-        "gregwar/image": "dev-master"
+        "gregwar/image": "~2.0"
     },
     "autoload": {
         "classmap": [
