@@ -39,6 +39,14 @@ class BonesServiceProvider extends ServiceProvider {
         $this->app->bindShared('bonesforms', function($app) {
             return new Libraries\BonesForms( $app['form'], $app['bones'] );
         });
+
+        $this->app['command.bones'] = $this->app->share(function($app) {
+            return new Commands\BonesCommand();
+        });
+        $this->app['command.bones.install'] = $this->app->share(function($app) {
+            return new Commands\InstallBonesCommand();
+        });
+        $this->commands('command.bones', 'command.bones.install');
 	}
 
 	/**

@@ -47,7 +47,7 @@ class BonesComponent {
         return new static($bones, $component);
     }
 
-    public function hasSettings() {
+    public static function hasSettings() {
         return false;
     }
 

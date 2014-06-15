@@ -35,4 +35,8 @@ class ComponentsController extends BonesController {
         return Redirect::route('components');
     }
 
+    public function componentSettings($type) {
+        echo $type;
+    }
+
 }

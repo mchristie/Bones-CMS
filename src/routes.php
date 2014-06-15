@@ -22,9 +22,10 @@ Route::group(array('prefix' => 'admin', 'before' => 'bones_auth'), function() {
 
     // Components
 
-    Route::any('/components',               array('as' => 'components',     'uses' => 'Christie\Bones\ComponentsController@showComponents'));
-    Route::any('/component/install/{type}', array('as' => 'component_install', 'uses' => 'Christie\Bones\ComponentsController@installComponent'));
-    Route::any('/component/uninstall/{type}',array('as' => 'component_uninstall', 'uses' => 'Christie\Bones\ComponentsController@uninstallComponent'));
+    Route::get('/components',               array('as' => 'components',     'uses' => 'Christie\Bones\ComponentsController@showComponents'));
+    Route::get('/component/{type}/install', array('as' => 'component_install', 'uses' => 'Christie\Bones\ComponentsController@installComponent'));
+    Route::get('/component/{type}/uninstall',array('as' => 'component_uninstall', 'uses' => 'Christie\Bones\ComponentsController@uninstallComponent'));
+    Route::any('/component/{type}/settings',array('as' => 'component_settings', 'uses' => 'Christie\Bones\ComponentsController@componentSettings'));
 
     // Entries
 

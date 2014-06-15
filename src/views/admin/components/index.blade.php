@@ -30,6 +30,11 @@
                                 @else
                                     <a href="{{URL::route('component_install', $name)}}">Install</a>
                                 @endif
+
+                                @if($class::hasSettings())
+                                    &nbsp; | &nbsp;
+                                    <a href="{{URL::route('component_settings', $name)}}">Settings</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
