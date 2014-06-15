@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "laravel/framework": "4.1.*",
+        "laravel/framework": "~4.1.*",
         "baum/baum": "~1.0",
         "gregwar/image": "~2.0"
     },
