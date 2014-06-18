@@ -31,9 +31,23 @@ class Entry extends Node {
      *  Return a link to the entry
      */
     public function getLinkAttribute() {
-        // TODO: Actually return a proper link for this Entry
+        return '<a href="'.$this->url.'">'.$this->title.'</a>';
+    }
 
-        return '<a href="/'.$this->slug.'">'.$this->title.'</a>';
+    /*
+     *  Generate the URL for the entry
+     */
+    public function getUrlAttribute() {
+        if ($this->channel->type == 'structured') {
+            $parents = $this->getAncestorsWithoutRoot();
+            $path = '';
+            foreach ($parents as $parent)
+                $path .= '/'.$parent->slug;
+
+            return $path.'/'.$this->slug;
+        } else {
+            return $this->channel->slug.'/'.$this->slug;
+        }
     }
 
     /*

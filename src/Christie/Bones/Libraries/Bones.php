@@ -41,7 +41,8 @@ class Bones {
             'email'      => '\Christie\Bones\Fieldtypes\EmailField',
             'wysiwyg'    => '\Christie\Bones\Fieldtypes\WysiwygField',
             'text'       => '\Christie\Bones\Fieldtypes\TextField',
-            'textarea'   => '\Christie\Bones\Fieldtypes\TextAreaField'
+            'textarea'   => '\Christie\Bones\Fieldtypes\TextAreaField',
+            'image'      => '\Christie\Bones\Fieldtypes\ImageField'
         )
     );
 
@@ -299,8 +300,15 @@ class Bones {
     /*
      *  Return a single entry, protecting user level etc
      */
-    public function entry($id, $config = null) {
-        return Entry::currentSite()->visibleBy()->find($id);
+    public function entry($id = null, $config = null) {
+        $_entry = Entry::currentSite()->visibleBy();
+
+        if ($id) {
+            return $_entry->find($id);
+        } else {
+            $slug = Request::segment(1) ?: '';
+            return $_entry->where('slug', $slug)->first();
+        }
     }
 
     /*

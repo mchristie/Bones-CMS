@@ -12,7 +12,6 @@ class FieldData extends Eloquent {
 
     protected $fillable = array('entry_id', 'field_id', 'integer_data', 'string_data', 'text_data');
 
-
     /*
      *  Relationships
      */

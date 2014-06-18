@@ -45,14 +45,14 @@ class Image extends Eloquent {
     /*
      *  Return a URL to a copy of this image at a specific size
      */
-    public function url($width, $height) {
+    public function url($width, $height = null) {
         return '/images/uploads/'.$this->id.'/'.$width.'x'.$height.'/'.$this->filename;
     }
 
     /*
      *  Return a path the the image at a certain size
      */
-    public function path($width, $height) {
+    public function path($width, $height = null) {
         return $this->base_path.$width.'x'.$height.'/'.$this->filename;
     }
 

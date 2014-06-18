@@ -20,6 +20,17 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
     }
 
     /*
+     *  Return a short section of the content without HTML
+     */
+    public function preview($words = 10) {
+        if ($this->field_data == null || $this->field_data->text_data == null)
+            return '';
+
+        $text = strip_tags($this->field_data->text_data);
+        return \Str::words($text, $words);
+    }
+
+    /*
      *  Create a new FieldData instance, and anything else we need
      */
     public function findOrCreateFieldData( \Christie\Bones\Models\Entry $entry ) {

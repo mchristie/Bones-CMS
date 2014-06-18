@@ -129,7 +129,7 @@ trait BonesModel {
                 $this->json_defaults = $field_type->data_json_defaults;
 
         // Save JSON fields for the field data settings into the field data object
-        } elseif ($this instanceof Field) {
+        } elseif ($this instanceof Field || $this instanceof Widget) {
 
             if ($field_type->settings_json_fields)
                 $this->json_fields = $field_type->settings_json_fields;
@@ -193,6 +193,16 @@ trait BonesModel {
         }
 
         return parent::__set($field, $data);
+    }
+
+    /*
+     *  Pass calls over to the $this->initialized if applicable
+     */
+    public function __call($method, $params) {
+        if ($this->initialized && method_exists($this->initialized, $method))
+            return call_user_func_array(array(&$this->initialized, $method), $params);
+
+        return parent::__call($method, $params);
     }
 
 

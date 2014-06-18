@@ -18,32 +18,44 @@ class Widget extends Eloquent {
         return $this->belongsTo('\Christie\Bones\Models\Site');
     }
 
-    public function getWidgetInstance() {
-        $this->initialized = true;
+    public function getTitleAttribute() {
+        if (!$this->initialized) $this->initialize();
 
-        $this->bones = \App::make('bones');
-        $this->widget = $this->bones->widgetInstance($this->type, $this);
-        $this->widget->restoreSettings();
+        return $this->initialized->title;
     }
 
-    public function __get($field) {
-        if ($this->exists && !$this->initialized)
-            $this->getWidgetInstance();
+    public function initialize() {
+        // We only want to initialize this field once, so return if it exists
+        if ($this->initialized) return $this->initialized;
 
-        if ($this->widget && $this->widget->hasField($field))
-            return $this->widget->$field;
+        $bones = \App::make('bones');
 
-        return parent::__get($field);
+        $this->initialized = $bones->widgetInstance($this->type, $this);
+        $this->jsonFields($this->initialized);
+
+        return $this;
     }
 
-    public function __call($method, $params) {
-        if ($this->exists && !$this->initialized)
-            $this->getWidgetInstance();
+    public function populate($data) {
+        $this->initialized->populate($data);
 
-        if (is_callable(array($this->widget, $method)))
-            return call_user_func_array(array($this->widget, $method), $params);
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->fillable) || ($this->json_attributes && array_key_exists($key, $this->json_attributes)))
+                $this->$key = $value;
+        }
 
-        return parent::__call($method, $params);
+        return parent::save();
+    }
+
+    /*
+     *  Setup events, such as recoding JSON fields before save
+     */
+    public static function boot() {
+        parent::boot();
+
+        Widget::saving(function($field) {
+            $field->saveJsonFields();
+        });
     }
 
 }

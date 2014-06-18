@@ -57,6 +57,10 @@ class BonesField {
         return true;
     }
 
+    public function saveSettings( Array $input ) {
+        return true;
+    }
+
     /*
      *  Save the data stored from populate
      */

@@ -8,8 +8,18 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
 
     public $title = 'Structured menu';
 
-    public $fields = array('title');
+    // Settings JSON fields
+    public $settings_json_fields = array(
+        'settings' => array('channel_id')
+    );
 
+    public $settings_json_attributes = array(
+        'channel_id' => 'settings'
+    );
+
+    public $settings_json_defaults = array(
+        'channel_id' => array()
+    );
 
     // Display the value of the widget, called by __toString
     public function render() {
@@ -62,7 +72,7 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
      *  The data should be stored in memory for displaying the form again if necessary
      */
     public function populate( Array $input ) {
-        $this->_settings = array_merge($this->_settings, $input);
+
     }
 
     // Return BOOL indicating if the field data from populate is valid

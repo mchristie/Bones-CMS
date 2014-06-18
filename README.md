@@ -11,7 +11,7 @@ Multi-site baked into everything, as many tree or blog style content channels as
 
 What can't it do? There's no one-click plugin installation, it's not wordpress nor is it trying to be.
 
-### How do I get started?
+### How do I install Bones?
 
 Bones CMS is a composer package, but it's not yet in packagist, so add `"christie/bones": "dev-master"` to your `composer.json`, but also tell composer where to find the repo by adding this"
 
@@ -31,7 +31,7 @@ Open `app/config/app.php` and add the following provider and aliases:
     // ...
     'Christie\Bones\BonesServiceProvider'
 ),
-// ...
+
 'aliases' => array(
     // ...
     'Bones'           => 'Christie\Bones\Facades\Bones',
@@ -40,3 +40,7 @@ Open `app/config/app.php` and add the following provider and aliases:
     'Entry'           => 'Christie\Bones\Models\Entry'
 )
 ~~~
+
+Open `app/config/auth.php` and change `'model' => 'User'` to `'model' => 'Christie\Bones\Models\User'`.
+
+Now run `php artisan bones:install`, this will run all the required migrations and talk you through creating the first website and user, and copy the required public assets.

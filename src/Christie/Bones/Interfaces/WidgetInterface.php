@@ -14,9 +14,6 @@ interface WidgetInterface
     // The field where admins can modify content
     public function settingsForm();
 
-    // Return BOOL indicating if a field can be returned by __get
-    public function hasField($field);
-
     /*
      *  Select the appropriate data from the POST input but DON'T save it
      *  The data should be stored in memory for displaying the form again if necessary

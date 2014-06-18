@@ -46,7 +46,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'bones_auth'), function() {
     // Widgets
 
     Route::get('/widgets',                  array('as' => 'widgets',        'uses' => 'Christie\Bones\WidgetsController@showWidgets'));
-    Route::get('/widget/{id}',              array('as' => 'widget_edit',    'uses' => 'Christie\Bones\WidgetsController@editWidget'));
+    Route::any('/widget/{id}',              array('as' => 'widget_edit',    'uses' => 'Christie\Bones\WidgetsController@editWidget'));
 
     // Users
 

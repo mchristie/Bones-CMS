@@ -21,7 +21,14 @@ class WidgetsController extends BonesController {
     }
 
     public function editWidget($id) {
-        $widget = Widget::currentSite()->find($id);
+        $widget = Widget::currentSite()->find($id)->initialize();
+
+        if (Request::getMethod() == 'POST') {
+            $widget->populate( Input::all() );
+            $widget->save();
+
+            return Redirect::route( 'widgets' );
+        }
 
         return $this->bones->view('admin.widgets.edit', array(
             'widget' => $widget
