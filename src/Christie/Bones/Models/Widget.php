@@ -12,7 +12,7 @@ class Widget extends Eloquent {
     private $bones;
     private $initialized = false;
 
-    protected $fillable = array('site_id', 'title', 'slug', 'created_at', 'updated_at', 'list_view', 'entry_view', 'type');
+    protected $fillable = array('site_id', 'title', 'slug', 'created_at', 'updated_at', 'list_view', 'entry_view', 'type', 'urls');
 
     public function site() {
         return $this->belongsTo('\Christie\Bones\Models\Site');
@@ -30,8 +30,7 @@ class Widget extends Eloquent {
 
         if (!$url) $url = '/'.\Request::path();
 
-dd(preg_match_all('`^'.$this->urls.'$`', $url));
-        return preg_match($this->url, $url);
+        return preg_match('`^'.$this->urls.'$`', $url);
     }
 
     public function initialize() {

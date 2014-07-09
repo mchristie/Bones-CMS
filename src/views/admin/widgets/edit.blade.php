@@ -7,12 +7,20 @@
 
             <form role="form" method="post">
 
-                {{BonesForms::field(array(
-                    'title'     => 'Area',
-                    'name'      => 'area',
-                    'options'   => 'widget_areas',
-                    'type'      => 'select',
-                    'value'     => $widget->area
+                {{BonesForms::fields(array(
+                    array(
+                        'title'     => 'Area',
+                        'name'      => 'area',
+                        'options'   => 'widget_areas',
+                        'type'      => 'select',
+                        'value'     => $widget->area
+                    ),
+                    array(
+                        'title'     => 'URLs',
+                        'name'      => 'urls',
+                        'type'      => 'text',
+                        'value'     => $widget->urls
+                    )
                 ))}}
 
                 @if($widget->displaysSettingsForm())
