@@ -29,19 +29,26 @@ trait BonesModel {
     /*
      *  Restrict any Bones model to the specified level
      */
-    public function scopeVisibleBy($query, $level = false) {
+    public function scopeVisibleBy($query, $level = false, $or_root = false) {
 
         // Use the current user level, if available
         if ($level === false && Auth::check()) {
             $level = Auth::user()->level;
 
         // Default to public
-        } else if($level === false) {
+        } else if ($level === false) {
             $level = \Christie\Bones\Libraries\Bones::LEVEL_PUBLIC;
 
         }
 
-        $query->where('level', '<=', $level);
+        if ($or_root) {
+            $query->where(function($query) use($level) {
+                $query->where('level', '<=', $level);
+                $query->orWhere('level', '>=', \Christie\Bones\Libraries\Bones::LEVEL_SYSTEM);
+            });
+        } else {
+            $query->where('level', '<=', $level);
+        }
 
         return $query;
     }
@@ -129,7 +136,7 @@ trait BonesModel {
                 $this->json_defaults = $field_type->data_json_defaults;
 
         // Save JSON fields for the field data settings into the field data object
-        } elseif ($this instanceof Field || $this instanceof Widget) {
+        } elseif ($this instanceof Component || $this instanceof Field || $this instanceof Widget) {
 
             if ($field_type->settings_json_fields)
                 $this->json_fields = $field_type->settings_json_fields;

@@ -4,48 +4,35 @@ namespace Christie\Bones\Widgets;
 
 use Christie\Bones\Models\Channel;
 
-class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interfaces\WidgetInterface {
+class CustomViewWidget extends BonesWidget implements \Christie\Bones\Interfaces\WidgetInterface {
 
-    public $title = 'Structured menu';
+    public $title = 'Custom view';
 
     // Settings JSON fields
     public $settings_json_fields = array(
-        'settings' => array('channel_id')
+        'settings' => array('view')
     );
 
     public $settings_json_attributes = array(
-        'channel_id' => 'settings'
+        'view' => 'settings'
     );
 
     public $settings_json_defaults = array(
-        'channel_id' => array()
+        'view' => null
     );
 
     // Display the value of the widget, called by __toString
     public function render() {
-        $channel = Channel::find($this->channel_id);
-        return $this->parseEntryTree( $channel->entryTree() );
-    }
-
-    public function parseEntryTree($entries) {
-        $str = '<ul>';
-
-        foreach ($entries as $entry) {
-            $str .= '<li>';
-            $str .= $entry->link;
-            if ($entry->children)
-                $str .= $this->parseEntryTree($entry->children);
-
-            $str .= '</li>';
+        if ($this->view) {
+            $this->bones = \App::make('bones');
+            return $this->bones->view( $this->view );
         }
 
-        $str .= '</ul>';
-
-        return $str;
+        return $this->bones->view( $this->view );
     }
 
     public function hasField($field) {
-        return in_array($field, array('title', 'channel_id')) ? true : false;
+        return in_array($field, array('title', 'view')) ? true : false;
     }
 
     // BOOL Indicating if this field show in the admin area
@@ -57,11 +44,10 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
     public function settingsForm() {
         return \BonesForms::fields(array(
             array(
-                'title'     => 'Channel',
-                'name'      => 'channel_id',
-                'type'      => 'select',
-                'options'   => 'channels',
-                'value'     => $this->channel_id
+                'title'     => 'View',
+                'name'      => 'view',
+                'type'      => 'text',
+                'value'     => $this->view
             )
         ));
     }
@@ -71,7 +57,7 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
      *  The data should be stored in memory for displaying the form again if necessary
      */
     public function populate( Array $input ) {
-
+        
     }
 
     // Return BOOL indicating if the field data from populate is valid

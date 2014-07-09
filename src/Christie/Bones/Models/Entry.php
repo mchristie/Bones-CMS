@@ -157,10 +157,17 @@ class Entry extends Node {
         $builder = $this->newQuery($excludeDeleted)->orderBy($this->getOrderColumnName());
 
         if ( $this->isScoped() ) {
-            foreach($this->scoped as $scopeFld)
-                $builder->where($scopeFld, '=', $this->$scopeFld);
+          foreach($this->scoped as $scopeFld)
+            $builder->where($scopeFld, '=', $this->$scopeFld);
         }
 
-        return $builder->restrict();
+        // return $builder->restrict();
+
+        $builder = $this->scopeCurrentSite( $builder );
+        $builder = $this->scopeVisibleBy( $builder, false, true );
+        $builder = $this->scopeStatus( $builder );
+
+        return $builder;
+
     }
 }

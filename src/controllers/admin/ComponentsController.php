@@ -36,7 +36,13 @@ class ComponentsController extends BonesController {
     }
 
     public function componentSettings($type) {
-        echo $type;
+        $component = $this->bones->component($type);
+
+        $data = array(
+            'component' => $component
+        );
+
+        return $this->bones->view('admin.components.settings', $data);
     }
 
 }

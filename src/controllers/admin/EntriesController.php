@@ -19,7 +19,7 @@ class EntriesController extends BonesController {
         if (!$channel) \App::abort(404);
 
         $this->bones->includeJS('/packages/christie/bones/jquery-ui-1.10.4.custom.min.js');
-        $this->bones->includeJS('/packages/christie/bones/jquery.mjs.nestedSortable.js');
+        $this->bones->includeJS('/packages/christie/bones/jquery.nestable.js');
         $this->bones->includeCSS('/packages/christie/bones/jquery-ui-1.10.4.custom.min.css');
 
         $entries = $channel->entries()->restrict()->get();

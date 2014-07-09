@@ -2,11 +2,17 @@
 
 namespace Christie\Bones\Components;
 
+use \URL;
 use \Christie\Bones\Models\Component;
 
 class BonesComponent {
 
     private $in_menu = true;
+
+    // Settings JSON fields
+    public $settings_json_fields     = false;
+    public $settings_json_attributes = false;
+    public $settings_json_defaults   = false;
 
     public function __construct($bones = false, $component = null) {
         if ($bones)
@@ -14,10 +20,21 @@ class BonesComponent {
 
         if ($component)
             $this->component = $component;
+
     }
 
-    public function urlPath( $extra = null) {
-        return '/admin/component/'.$this->name.($extra ? '/'.$extra : '');
+    public function initialize() {
+        // No need to do much, override this to add functionality
+    }
+
+    public function urlPath( $extra = null, $full = false) {
+        $path = '/admin/component/'.$this->name.($extra ? '/'.$extra : '');
+
+        if ($full) {
+            return URL::to($path);
+        } else {
+            return $path;
+        }
     }
 
     public static function isInstalled() {

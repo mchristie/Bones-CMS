@@ -48,7 +48,8 @@ class Bones {
 
     // Bundled widgets, registered 3rd party field types will be added here
     private $widgets        = array(
-        'structured_menu'  => '\Christie\Bones\Widgets\StructuredMenuWidget'
+        'structured_menu'  => '\Christie\Bones\Widgets\StructuredMenuWidget',
+        'custom_view'      => '\Christie\Bones\Widgets\CustomViewWidget'
     );
 
     private $components     = array();
@@ -197,7 +198,17 @@ class Bones {
             'uses'      => $controller
         ));
 
-        $component->initialize();
+        $component->configure();
+    }
+
+    /*
+     *  Return an initialized instance of a component
+     */
+    public function component($component_name) {
+        $component = Component::currentSite()->where('type', $component_name)->first();
+        if (!$component) return false;
+
+        return $component->initialize();
     }
 
     public function registerComponentRoutes($path, $callback) {
@@ -444,7 +455,14 @@ class Bones {
      *  Optionally render them all and return the HTML
      */
     public function widgets($area, $render = false) {
-        $widgets = \Christie\Bones\Models\Widget::currentSite()->where('area', $area)->get();
+        $_widgets = \Christie\Bones\Models\Widget::currentSite()->where('area', $area)->get();
+
+        $widgets = array();
+
+        foreach ($_widgets as $widget) {
+            if ($widget->matchesUrl())
+                $widgets[] = $widget->initialize();
+        }
 
         if ($render) {
             $str = '';

@@ -24,6 +24,16 @@ class Widget extends Eloquent {
         return $this->initialized->title;
     }
 
+    public function matchesUrl( $url = null ) {
+        // If there's no filter, it matches
+        if (!$this->urls) return true;
+
+        if (!$url) $url = '/'.\Request::path();
+
+dd(preg_match_all('`^'.$this->urls.'$`', $url));
+        return preg_match($this->url, $url);
+    }
+
     public function initialize() {
         // We only want to initialize this field once, so return if it exists
         if ($this->initialized) return $this->initialized;

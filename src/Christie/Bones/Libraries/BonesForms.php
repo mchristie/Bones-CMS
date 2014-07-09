@@ -195,7 +195,7 @@ class BonesForms {
     /*
      *  Return the default field group container
      */
-    public function formGroupOpen( $type ) {
+    public function formGroupOpen( $type = null ) {
         if ($type == 'checkbox' || $type == 'radio') {
             $class = $type;
 

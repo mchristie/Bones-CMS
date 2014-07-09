@@ -122,7 +122,28 @@
 
 @section('additional_js')
 <script>
+    $('#sort-modal').on('show.bs.modal', function() {
+        $('.sortable').nestable({
+            'listNodeName':      'ul',
+            'itemNodeName':      'li',
+            'rootClass':         'ul',
+            // 'listClass':         'dd-list',
+            // 'itemClass':         'dd-item',
+            // 'dragClass':         'dd-dragel',
+            'handleClass':       'glyphicon',
+            // 'collapsedClass':    'dd-collapsed',
+            // 'placeClass':        'dd-placeholder',
+            // 'emptyClass':        'dd-empty',
+            'expandBtnHTML':     '', // '<button data-action="expand">Expand></button>',
+            'collapseBtnHTML':   '', // '<button data-action="collapse">Collapse</button>'
+        });
+    });
 
+    $('#sort-modal').on('hide.bs.modal', function() {
+
+    });
+
+    /*
     $('#sort-modal').on('show.bs.modal', function() {
         $('.sortable').nestedSortable({
             forcePlaceholderSize: true,
@@ -155,6 +176,7 @@
         var data = $('.sortable').nestedSortable('toArray', {startDepthCount: 0});
         console.log(data);
     });
+    */
 
 </script>
 @endsection

@@ -65,7 +65,11 @@ class BonesField {
      *  Save the data stored from populate
      */
     public function save() {
-        return $this->field_data->save();
+        if ($this->field)
+            $this->field->save();
+
+        if ($this->field_data)
+            $this->field_data->save();
     }
 
     /*
@@ -95,6 +99,20 @@ class BonesField {
 
         if ($this->field && $this->field->hasField($field))
             return $this->field->$field;
+    }
+
+    /*
+     *  When we access a value on any BonesField, we're really looking for the field details
+     */
+    public function __set($field, $value) {
+
+        if ($this->field_data && $this->field_data->hasField($field))
+            return $this->field_data->$field = $value;
+
+        if ($this->field && $this->field->hasField($field))
+            return $this->field->$field = $value;
+
+        return $this->$field = $value;
     }
 
     /*
