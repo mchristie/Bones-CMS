@@ -57,6 +57,14 @@ class BonesForms {
                     $list = $this->bones->statusTitles();
                     break;
 
+                // Provide a list of widgets to select
+                case 'boolean':
+                    $list = array(
+                        1 => 'Yes',
+                        0 => 'No'
+                    );
+                    break;
+
                 // Provide a list of sites to select
                 case 'sites':
                     $list = array(null => 'Global');

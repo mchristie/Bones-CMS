@@ -27,14 +27,21 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
         return $this->parseEntryTree( $channel->entryTree() );
     }
 
-    public function parseEntryTree($entries) {
-        $str = '<ul>';
+    public function parseEntryTree($entries, $dropdown = false) {
+        $str = $dropdown ?
+            '<ul class="dropdown-menu" role="menu">' :
+                '<ul class="nav navbar-nav">';
 
         foreach ($entries as $entry) {
+            if ($entry->show_in_menu) continue;
+
             $str .= '<li>';
-            $str .= $entry->link;
-            if ($entry->children)
-                $str .= $this->parseEntryTree($entry->children);
+            if ($entry->children->count()) {
+                $str .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'.$entry->title.' <span class="caret"></span></a>';
+                $str .= $this->parseEntryTree($entry->children, true);
+            } else {
+                $str .= $entry->link;
+            }
 
             $str .= '</li>';
         }

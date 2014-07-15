@@ -32,6 +32,13 @@
                         'type'      => 'select',
                         'options'   => 'statuses',
                         'value'     => $entry->status
+                    ),
+                    array(
+                        'title'     => 'Show in menu',
+                        'name'      => 'show_in_menu',
+                        'type'      => 'select',
+                        'options'   => 'boolean',
+                        'value'     => $entry->show_in_menu
                     )
                 ))}}
 

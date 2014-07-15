@@ -28,7 +28,7 @@ class Widget extends Eloquent {
         // If there's no filter, it matches
         if (!$this->urls) return true;
 
-        if (!$url) $url = '/'.\Request::path();
+        if (!$url) $url = \Request::path();
 
         return preg_match('`^'.$this->urls.'$`', $url);
     }

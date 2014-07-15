@@ -44,6 +44,9 @@ class Entry extends Node {
             foreach ($parents as $parent)
                 $path .= '/'.$parent->slug;
 
+            // Avoid returning a // for root
+            if (!$path && $this->slug == '/') return '/';
+
             return $path.'/'.$this->slug;
         } else {
             return $this->channel->slug.'/'.$this->slug;
@@ -87,6 +90,9 @@ class Entry extends Node {
 
         if (array_key_exists('status', $input))
             $this->status = $input['status'];
+
+        if (array_key_exists('show_in_menu', $input))
+            $this->show_in_menu = $input['show_in_menu'];
     }
 
     /*

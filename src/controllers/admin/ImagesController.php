@@ -55,7 +55,10 @@ class ImagesController extends BonesController {
     }
 
     public function showImageResized($id, $dimensions, $filename) {
-        list($width, $height) = explode('x', $dimensions);
+        $segments = explode('x', $dimensions);
+
+        $width = reset($segments);
+        $height = count($segments) >= 2 ? $segments[1] : null;
 
         $image = Image::find($id);
 

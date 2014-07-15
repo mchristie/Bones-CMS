@@ -317,7 +317,8 @@ class Bones {
         if ($id) {
             return $_entry->find($id);
         } else {
-            $slug = Request::segment(1) ?: '';
+            $segments = Request::segments();
+            $slug = end($segments) ?: '';
             return $_entry->where('slug', $slug)->first();
         }
     }

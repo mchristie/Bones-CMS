@@ -9,6 +9,8 @@ use Christie\Bones\Models\Channel;
 use Christie\Bones\Models\Entry;
 use Christie\Bones\Models\Widget;
 
+use \Request;
+
 class BonesController extends \BaseController {
 
     /*
@@ -23,21 +25,35 @@ class BonesController extends \BaseController {
      *  Do our best to find a matching channel/entry to show
      */
     public function auto() {
-        // Two segments, assume channel / entry
+        // Two segments
         if (count(\Request::segments()) == 2) {
-            $channel = Channel::where('slug', \Request::segment(1))->first();
-            if ($channel) {
-                $entry = $channel->entries()->where('slug', \Request::segment(2))->first();
+            // Find all matching entries
+            $entries = Entry::restrict()->where('slug', Request::segment(2))->get();
+            foreach ($entries as $entry) {
+                $channel = $entry->channel;
 
-                if ($entry) {
+                // If the channel slug matches, we can use the channel view if we need to
+                if ($channel->slug == Request::segment(1)) {
                     return $this->bones->view($entry->view ?: $channel->entry_view, array(
                         'channel' => $channel,
-                        'entry'   => $entry
+                        'entry' => $entry
                     ));
-                } else {
-                    return self::notFound();
                 }
+
+                // Check if we have an entry parent
+                if ($parent = $entry->parent) {
+                    if ($parent->slug == Request::segment(1)) {
+                        $view = $entry->view ?: ($parent->view ?: $channel->entry_view);
+                        return $this->bones->view($entry->view ?: $channel->entry_view, array(
+                            'channel' => $channel,
+                            'parent' => $parent,
+                            'entry' => $entry
+                        ));
+                    }
+                }
+
             }
+
         }
 
         // One segment, list a channel or find a single entry
@@ -62,6 +78,19 @@ class BonesController extends \BaseController {
                     'entry' => $entry
                 ));
             }
+        }
+
+        // If there is no slug, look for a homepage
+        $entry = Entry::where(function($query) {
+            $query->where('slug', '/');
+            $query->orWhere('slug', '');
+        })->restrict()->first();
+        if ($entry) {
+            $channel = $entry->channel;
+            return $this->bones->view($entry->view ?: $channel->entry_view, array(
+                'channel' => $channel,
+                'entry' => $entry
+            ));
         }
 
         return self::notFound();
