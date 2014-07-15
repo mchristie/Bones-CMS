@@ -33,7 +33,7 @@ class StructuredMenuWidget extends BonesWidget implements \Christie\Bones\Interf
                 '<ul class="nav navbar-nav">';
 
         foreach ($entries as $entry) {
-            if ($entry->show_in_menu) continue;
+            if (!$entry->show_in_menu) continue;
 
             $str .= '<li>';
             if ($entry->children->count()) {
