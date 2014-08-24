@@ -299,6 +299,10 @@ class Bones {
             // Call this method again, but calculate paging
             $this->entries($config, true);
 
+            // Order the results
+            // TODO - this needs to be controllable!
+            $_entries->orderBy('created_at', 'desc');
+
             // Return the results
             return $_entries->get();
 

@@ -19,6 +19,11 @@
                     <input type="text" class="form-control" id="name" name="name" placeholder="Field name" value="{{$field->name}}">
                 </div>
 
+                <div class="form-group">
+                    <label for="help">Help text</label>
+                    <input type="text" class="form-control" id="help" name="help" placeholder="Help text" value="{{$field->help}}">
+                </div>
+
                 @if($field->displaysSettingsForm())
                     {{$field->settingsForm()}}
                 @endif

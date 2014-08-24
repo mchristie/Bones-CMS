@@ -51,7 +51,12 @@ class EmailField extends BonesField implements \Christie\Bones\Interfaces\Fieldt
      *  TODO: This should probably use views and show it's own label etc
      */
     public function editForm() {
-        return '<input class="form-control" name="'.$this->name.'" value="'.$this->field_data->string_data.'" />';
+        $html = '<input class="form-control" name="'.$this->name.'" value="'.$this->field_data->string_data.'" />';
+
+        if ($this->help)
+            $html .= '<p class="help-block">'.$this->help.'</p>';
+
+        return $html;
     }
 
     /*

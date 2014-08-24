@@ -112,7 +112,7 @@ trait BonesModel {
      *  Format the specified date
      */
     public function date($format = 'jS M', $field = 'updated') {
-        if (!\Str::endsWith($field, '_at')) $field .= '_at';
+        if ($field == 'created' || $field == 'updated') $field .= '_at';
         return date($format, strtotime($this->$field));
     }
 

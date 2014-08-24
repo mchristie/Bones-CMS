@@ -64,7 +64,8 @@ class TextField extends BonesField implements \Christie\Bones\Interfaces\Fieldty
             'type'    => 'text',
             'title'   => 'Minimum characters',
             'name'    => 'min_length',
-            'value'   => $this->min_length
+            'value'   => $this->min_length,
+            'help'    => $this->help
         ));
     }
 

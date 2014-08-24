@@ -57,7 +57,12 @@ class ImageField extends BonesField implements \Christie\Bones\Interfaces\Fieldt
     public function editForm() {
 
         // And return the HTML
-        return '<input class="form-control" name="'.$this->name.'" value="'.$this->field_data->integer_data.'" placeholder="Image ID" />';
+        $html = '<input class="form-control" name="'.$this->name.'" value="'.$this->field_data->integer_data.'" placeholder="Image ID" />';
+
+        if ($this->help)
+            $html .= '<p class="help-block">'.$this->help.'</p>';
+
+        return $html;
     }
 
     /*

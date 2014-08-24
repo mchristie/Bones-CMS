@@ -61,7 +61,12 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
         \View::inject('additional_js', '<script type="text/javascript">tinymce.init({selector: "#wysiwyg-'.$uid.'"});</script>');
 
         // And return the HTML
-        return '<textarea class="form-control" rows="10" name="'.$this->name.'" id="wysiwyg-'.$uid.'">'.$this->field_data->text_data.'</textarea>';
+        $html = '<textarea class="form-control" rows="10" name="'.$this->name.'" id="wysiwyg-'.$uid.'">'.$this->field_data->text_data.'</textarea>';
+
+        if ($this->help)
+            $html .= '<p class="help-block">'.$this->help.'</p>';
+
+        return $html;
     }
 
     /*

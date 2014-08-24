@@ -71,7 +71,8 @@ class CheckboxesField extends BonesField implements \Christie\Bones\Interfaces\F
             'name'    => $this->name.'[]',
             'title'   => $this->title,
             'values'  => $this->options,
-            'checked' => $this->selected ?: array()
+            'checked' => $this->selected ?: array(),
+            'help'    => $this->help
         ));
     }
 

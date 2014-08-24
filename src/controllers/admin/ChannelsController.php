@@ -74,6 +74,7 @@ class ChannelsController extends BonesController {
             $field->channel_id  = $channel_id;
             $field->label       = Input::get('label', 'New field');
             $field->name        = Input::get('name', 'new-field-'.rand(1,99));
+            $field->help        = Input::get('help');
             $field->field_type  = Input::get('field_type');
 
             if ($field_type)

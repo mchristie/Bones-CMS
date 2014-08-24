@@ -39,7 +39,12 @@ class TextAreaField extends BonesField implements \Christie\Bones\Interfaces\Fie
      *  TODO: This should probably use views and show it's own label etc
      */
     public function editForm() {
-        return '<textarea class="form-control" name="'.$this->name.'">'.$this->field_data->text_data.'</textarea>';
+        $html = '<textarea class="form-control" name="'.$this->name.'">'.$this->field_data->text_data.'</textarea>';
+
+        if ($this->help)
+            $html .= '<p class="help-block">'.$this->help.'</p>';
+
+        return $html;
     }
 
     /*
