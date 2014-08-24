@@ -86,7 +86,7 @@ class Bones {
 
         // Wildcard match
         if (!$this->site)
-            Site::where('url', '*')->orWhereNull('url')->first();
+            $this->site = Site::where('url', '*')->orWhereNull('url')->first();
 
         // Fail
         if (!$this->site)
