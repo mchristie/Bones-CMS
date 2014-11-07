@@ -5,7 +5,9 @@
 
 @foreach($images as $image)
 
-    <div class="panel panel-default col-md-3 image" data-image-id="{{$image->id}}" onclick="preview('{{$image->filename}} ({{$image->id}})', '{{$image->url}}');">
+    <div class="panel panel-default col-md-3 image"
+         data-image-id="{{$image->id}}"
+         onclick="preview('{{$image->filename}} ({{$image->id}})', '{{$image->url(560)}}');">
 
         <img src="{{$image->url(150, 150)}}" style="max-width: 100%;" />
 

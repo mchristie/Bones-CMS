@@ -20,7 +20,7 @@
             "src/migrations"
         ],
         "psr-0": {
-            "Christie\\Bones\\": "src/"
+            "Christie\\Bones\\": "src/Christie/Bones"
         }
     },
     "minimum-stability": "stable"

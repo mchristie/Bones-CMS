@@ -25,7 +25,7 @@ class CustomViewWidget extends BonesWidget implements \Christie\Bones\Interfaces
     public function render() {
         if ($this->view) {
             $this->bones = \App::make('bones');
-            return $this->bones->view( $this->view );
+            return $this->bones->view( $this->view, json_decode($this->settings, true) );
         }
 
         return $this->bones->view( $this->view );
@@ -57,7 +57,7 @@ class CustomViewWidget extends BonesWidget implements \Christie\Bones\Interfaces
      *  The data should be stored in memory for displaying the form again if necessary
      */
     public function populate( Array $input ) {
-        
+
     }
 
     // Return BOOL indicating if the field data from populate is valid

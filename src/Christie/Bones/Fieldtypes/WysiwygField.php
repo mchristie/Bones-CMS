@@ -58,7 +58,7 @@ class WysiwygField extends BonesField implements \Christie\Bones\Interfaces\Fiel
         $uid = rand(0, 999);
 
         // Initialize the editor
-        \View::inject('additional_js', '<script type="text/javascript">tinymce.init({selector: "#wysiwyg-'.$uid.'"});</script>');
+        \View::inject('additional_js', '<script type="text/javascript">tinymce.init({selector: "#wysiwyg-'.$uid.'", plugins: "code"});</script>');
 
         // And return the HTML
         $html = '<textarea class="form-control" rows="10" name="'.$this->name.'" id="wysiwyg-'.$uid.'">'.$this->field_data->text_data.'</textarea>';
