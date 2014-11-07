@@ -15,8 +15,8 @@
     "autoload": {
         "classmap": [
             "src/controllers",
-            "src/christie/bones/facades",
-            "src/christie/bones/libraries",
+            "src/Christie/Bones/Facades",
+            "src/Christie/Bones/Libraries",
             "src/migrations"
         ],
         "psr-0": {
