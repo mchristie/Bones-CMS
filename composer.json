@@ -15,6 +15,7 @@
     "autoload": {
         "classmap": [
             "src/controllers",
+            "src/Christie/Bones",
             "src/Christie/Bones/Facades",
             "src/Christie/Bones/Libraries",
             "src/migrations"
