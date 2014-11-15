@@ -58,7 +58,7 @@ class BonesController extends \BaseController {
 
         // One segment, list a channel or find a single entry
         if (count(\Request::segments()) == 1) {
-            $channel = Channel::where('slug', \Request::segment(1))->first();
+            $channel = Channel::currentSite()->where('slug', \Request::segment(1))->first();
             if ($channel) {
                 return $this->bones->view($channel->list_view, array(
                     'channel' => $channel,

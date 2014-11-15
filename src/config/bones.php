@@ -5,8 +5,8 @@ return array(
 
     'views' => array(
         'Public views' => array(
-            'public.channel_list'  => 'Channel list view',
-            'public.channel_entry' => 'Channel single entry view',
+            'blog.channel_list'  => 'Blog list view',
+            'blog.channel_entry' => 'Blog single entry view',
         )
     ),
 
