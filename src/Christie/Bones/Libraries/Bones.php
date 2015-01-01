@@ -549,12 +549,12 @@ class Bones {
             throw new \Exception('Bones::createEntry - Channel not found');
 
         // If the auth level isn't public, or the level isn't high enough, fail
-        if ($channel->publish_level > self::LEVEL_PUBLIC || !(Auth::check() && Auth::user()->level >= $channel->publish_level))
+        if ($channel->publish_level > self::LEVEL_PUBLIC && !(Auth::check() && Auth::user()->level >= $channel->publish_level))
             return false;
 
         $entry = Entry::create(array(
-            'title'      => Input::get('name'),
-            'channel_id' => 7,
+            'title'      => array_get($data, 'title'),
+            'channel_id' => $channel->id,
             'site_id'    => $this->site()->id,
             'status'     => self::STATUS_DRAFT
         ));
@@ -582,7 +582,7 @@ class Bones {
             }
         }
 
-        return $validates;
+        return $entry;
     }
 
     /*
